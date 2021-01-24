@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Helping Hearts Survey</title></title>
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&display=swap" rel="stylesheet">
+		<style>
+		
+			/* Normal Styling */
+			body {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				width: 100vw;
+				height: 100vh;
+				background-color: #C6DBF2;
+				color: #fff;
+				font-family: 'Fira Code', monospace;
+				line-height: 1.5;
+				margin: 0;
+			}
+			body > div {
+				position: absolute;
+				padding: 24px 48px;
+				border-radius: 16px;
+				background-color: rgba(255,255,255,0.08);
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				max-width: 760px;
+			}
+			p {
+				margin: 24px 0;
+				width: 100%;
+			}
+			span {
+				color: orange;
+			}
+			a, a:visited {
+				color: deepskyblue;
+			}
+			
+			/* Form */
+			form {
+				width: 400px;
+				height: 600px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				flex-basis: grow;
+			}
+			form > div {
+				width: 80%;
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				justify-content: center;
+			}
+			label {
+				width: 100%;
+			}
+			input, select {
+				width: 100%;
+				box-sizing: border-box;
+			}
+			
+			/* Try gradient at some point*/
+			.color {
+				background: linear-gradient(to bottom, #063DD4 0%, #7ED2C9 100%);
+			}
+			
+			/* slider styling */
+			
+			.slidecontainer {
+				width: 100;
+			}
+			.slider {
+				-webkit-appearance: none;
+				width: 100%;
+				height 15px;
+				border-radius: 25px;
+				background: #FFFFFF;
+				outline: none;
+				opacity: 0.7;
+				-webkit-transition: .2s;
+				transition: opacity .2s;
+			}
+			.slider:hover {
+				opacity: 1;
+			}
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 25px;
+				height: 25px;
+				border-radius: 50%;
+				background: #063DD4;
+				cursor: pointer;
+			}
+			
+			/* Modal Styling */
+			.modal {
+				display: none;
+				position: fixed;
+				z-index: 1;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				background: #4489D5;
+				background-color: rgba(0,0,0,0.4);
+			}
+			
+			/* Inside Modal */
+			.modal-content {
+				background-color: #4489D5;
+				margin: 15% auto;
+				padding: 20px;
+				border 1px solid #888;
+				width: 80%;
+				border-radius: 5%;
+			}
+			
+			/* Close Button */
+			.close {
+				color: #aaa;
+				float: right;
+				font-size: 28px;
+				font-weight: bold;
+			}
+			.close:hover, .close:focus {
+				color: black;
+				text-decoration: none;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="color">
+			<div class="container">
+				
+			<!--	<button id="myBtn">Open Modal</button>
+				<div id="myModal" class="modal">
+					<div class="modal-content">
+						<span class="close">&times;</span>
+						<p>Some text in the Modal..</p>
+					</div>
+				</div> -->
+				
+				<h1>How Are You Feeling?</h1><br>
+				<form action="/survey/checkout" method="post" enctype="multipart/form-data">
+					<div>
+						<label>Name</label>
+						<input type="text" name="name">
+					</div>
+					<div>
+						<label>Gender</label>
+						<select name="gender">
+							<option value=""></option>
+							<option value="female">Female</option>
+							<option value="male">Male</option>
+							<option value="non-binary">Non-Binary</option>
+							<option value="no-answer">Prefer not to say</option>
+						</select>
+					</div><br>
+					<div>
+						<label>Pronouns</label>
+						<input type="text">
+					</div>
+					<div class="slidecontainer"><br>
+						<label>On a scale of 1 to 10, how are you feeling today?</label><br>
+						<input type="range" min="1" max="10" value="5" class="slider" id="myRange">
+						<p>Value: <span id="demo" style="color:#FFFFFF;"></span></p>
+					</div>
+					<div>
+						<label>Do you feel like talking to people today?</label>
+						<input type="text" name="talking" list="talk">
+						<datalist id="talk">
+							<option>Yes</option>
+							<option>No</option>
+							<option>I Don't Know</option>
+						</datalist>
+					</div><br>
+					<div>
+						<input type="submit">
+						<input type="hidden" name="redirecturl" value="/home.html">
+						<input type="hidden" name="survey" value="sample">
+					</div>
+				</form><br><br>
+				
+			</div>
+		</div>
+		<script>
+			// Slider
+			var slider = document.getElementById("myRange");
+			var output = document.getElementById("demo");
+			output.innerHTML = slider.value;
+			
+			slider.oninput = function() {
+				output.innerHTML = this.value;
+			}
+			
+			// Modal
+			var modal = document.getElementById("myModal");
+			var btn = document.getElementById("myBtn");
+			var span = document.getElementsByClassName("close")[0];
+			//When the user clicks the "Open Modal" button, open the modal
+			btn.onclick = function() {
+				modal.style.display = "block";
+			}
+			//When the user clicks the x, close the modal
+			span.onclick = function() {
+				modal.style.display = "none";
+			}
+			//When the user clicks anywhere else besides the modal, close the modal
+			window.onclick = function(event) {
+				if(event.target == modal) {
+					modal.style.display = "none";
+				}
+			}
+/*			let links = document.querySelectorAll('.domain');
+			links.forEach(link => {
+				if(link.href.trim().startsWith('/')) link.href = location.origin + link.href;
+				if(link.innerHTML.trim().startsWith('/')) link.innerHTML = location.origin + link.innerHTML;
+			}) */
+		</script>
+	</body>
+</html>

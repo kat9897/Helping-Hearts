@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>User's Statuses</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+		<style>
+			body {
+				display: grid;
+				grid-template-areas: "n n"
+									 "h h"
+									 "a m"
+									 "f f";
+				grid-template-rows: 50px 400px auto 50px;
+				grid-template-columns: 300px auto;
+				width: 100vw;
+				height: 100vh;
+				overflow-x: hidden;
+				overflow-y: auto;
+				margin: 0;
+				font-family: "Open Sans", sans-serif;
+				color: #232323;
+			}
+			
+			nav {
+				grid-area: n;
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				padding: 0 80px;
+				background: linear-gradient(to right, #063DD4 0%, #7ED2C9 100%);
+			}
+			nav a {
+				display: block;
+				padding: 0 20px;
+				color: #232323;
+				text-decoration: none;
+			}
+			
+			header {
+				grid-area: h;
+				width: 100%;
+				height: 100%;
+				position: relative;
+				background-color: lightyellow;
+			}
+			header img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: 50% 50%;
+			}
+			header h1 {
+				position: absolute;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				margin: 0;
+				padding: 0;
+			}
+			header h1 span {
+				color: white;
+				font-size: 48px;
+				text-shadow: 2px 4px 2px rgba(0,0,0,0.3);
+				text-align: center;
+			}
+			
+			aside {
+				grid-area: a;
+				display: flex;
+				flex-direction: column;
+				margin: 40px 0;
+				padding: 0 40px;
+				background-color: lightblue;
+			}
+			aside h3 {
+				text-transform: uppercase;
+				font-weight: 400;
+			}
+			aside section {
+				display: grid;
+				grid-template-columns: 40px auto;
+				align-items: center;
+			}
+			aside section input {
+				display: block;
+				transform: scale(1.5);
+			}
+			aside section label {
+				color: #696969;
+				font-weight: 300;
+				line-height: 2;
+			}
+			
+			main {
+				grid-area: m;
+				margin: 40px 0;
+				padding: 0 40px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-wrap: wrap;
+				backgorund-color: lightgreen;
+			}
+			main div {
+				width: 200px;
+				height: 320px;
+				overflow: hidden;
+				background-color: #F4F6F7;
+				margin: 20px;
+			}
+			main div img {
+				width: 100%;
+				height: 50%;
+				object-fit: cover;
+				object-position: 50% 50%;
+			}
+			main div h3 {
+				padding: 0;
+				margin: 16px;
+				font-weight: 600;
+			}
+			main div h4 {
+				padding: 0;
+				margin: 16px;
+				font-weight: 200;
+				color: #FF4500;
+				line-height: 1.5;
+			}
+			main div a {
+				display: block;
+				padding: 0;
+				margin: 16px;
+				font-weight: 400;
+				color: #000000;
+				line-height: 1.5;
+			}
+			
+			footer {
+				grid-area: f;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-top: 1px solid #f4f6f7;
+				color: #696969;
+				font-size: 14px;
+				background-color: white;
+			}
+			
+			img {
+				width: 100px;
+			}
+			/* Modal Styling */
+			.modal {
+				display: none;
+				position: fixed;
+				z-index: 1;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				background: #4489D5;
+				background-color: rgba(0,0,0,0.4);
+			}
+			
+			/* Inside Modal */
+			.modal-content {
+				position: relative;
+				background-color: #4489D5;
+				margin: auto;
+				padding: 0px;
+				border 1px solid #888;
+				width: 80%;
+				border-radius: 5%;
+				box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+				-webkit-animation-name: animatetop;
+				-webkit-animation-duration: 0.4s;
+				animation-name: animatetop;
+				animation-duration: 0.4s;
+			}
+			.modal-header {
+				padding: 2px 16px;
+				background-color: #063DD4;
+				color: white;
+			}
+			.modal-body {
+				padding: 2px 16px;
+				background-color: white;
+			}
+			
+			/* Modal Animation */
+			@keyframes animatetop {
+				from {top: -300px; opacity:0}
+				to {top: 0; opacity:1}
+			}
+			
+			/* Close Button */
+			.close {
+				color: white;
+				float: right;
+				font-size: 28px;
+				font-weight: bold;
+			}
+			.close:hover, .close:focus {
+				color: #000;
+				text-decoration: none;
+				cursor: pointer;
+			}
+		</style>
+		
+		 <!-- The place to define mobile friendly styles -->
+    <style>
+        /* Anything smaller that 760px is a mobile device */
+    	@media only screen and (max-width: 760px) {
+    		body {
+    			grid-template-areas: 'n'            /* Putting our elements as one large column */
+                                    'h'
+                                    'a'
+                                    'm'
+                                    'f';
+    			grid-template-rows: 50px 240px auto auto 50px;
+    			grid-template-columns: auto;
+    		}
+    		nav {
+    			padding: 0 20px;
+    		}
+    		header h1 span {
+    			font-size: 32px;
+    			text-align: center;
+    		}
+    		aside {
+    			margin: 20px 0;
+    			padding: 0 20px;
+    		}
+    		aside section {
+    			grid-template-columns: 30px 1fr 30px 1fr;
+    		}
+    		main {
+    			margin: 20px 0;
+    			padding: 0;
+    		}
+    		main div {
+    			width: 100%;
+    			height: 300px;
+    		}
+    	}
+    </style>
+		
+		<script type="module">
+			const $main = document.querySelector("main");
+			let data;
+			
+			function bindItem(item) {
+				const div = document.createElement("div");
+				
+				const card = `
+							<img src='${item.images}'>
+							<h3>${item.commonName}</h3>
+							<h4>${item.conservationStatus}</h4>
+							<a href='${item.links}'>Learn More</a>`
+							
+				div.innerHTML = card;
+				
+				$main.appendChild(div);
+			}
+			
+			function bindData(data) {
+				$main.innerHTML = "";
+				data.forEach(bindItem);
+			}
+			
+			async function fetchData() {
+				const response = await fetch("data.json");
+				
+				const json = await response.json();
+				
+				data = json;
+				
+				bindData(data)
+			}
+			
+			fetchData();
+			
+			const $sortInputs = document.querySelectorAll('input[name=sort]')
+			const $riskInputs = document.querySelectorAll('input[name=risk]')
+
+			/* Function to sort the data */
+			function sort(e) {
+				if(this.value === 'up') {
+					data.sort((a, b) => a.commonName > b.commonName ? -1 : 1);
+				} else {
+					data.sort((a, b) => a.commonName > b.commonName ? 1 : -1);
+				}
+	
+				bindData(data)
+			}
+
+			/* Function to filter the data */
+			function filter(e) {
+				let filteredData;
+				if(this.value === 'all') {
+					filteredData = data;
+				} else {
+					filteredData = data.filter(item => item.conservationStatus === this.value)
+				}
+				bindData(filteredData);
+			}
+
+			/* Looping through each element and adding a click event listener */
+			$sortInputs.forEach(input => input.addEventListener('click', sort));
+			$riskInputs.forEach(input => input.addEventListener('click', filter));
+			
+			// Modal
+			var modal = document.getElementById("myModal");
+			var btn = document.getElementById("myBtn");
+			var span = document.getElementsByClassName("close")[0];
+			//When the user clicks the "Open Modal" button, open the modal
+			btn.onclick = function() {
+				modal.style.display = "block";
+			}
+			//When the user clicks the x, close the modal
+			span.onclick = function() {
+				modal.style.display = "none";
+			}
+			window.onclick = function(event) {
+				if(event.target == modal) {
+					modal.style.display = "none";
+				}
+			}
+		</script>
+		
+	</head>
+	<body>
+		<nav>
+			<a href="/home.html">Home</a>
+				<!-- Actual modal -->
+			<button id="myBtn">About Us</button>
+			<a href="/survey.html">Survey</a>
+			
+			<div id="myModal" class="modal" style="align-items:center;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<span class="close">&times;</span>
+					<h1>About Us</h1>
+				</div>
+				<div class="modal-body">
+					<p style="color:black;">Helping Hearts was founded by 4 students who wanted to combat the negativity the pandemic has brought upon society by offering a social platform to communicate their thoughts on. It helps with not only miscommunication, but bringing people together when they most need it in a welcoming community for all! The founders of Helping Hearts are:
+						<ul>
+							<li><a href="https://www.linkedin.com/in/katrina-best">Katrina Best</a></li>
+							<li><a href="linkedin.com/in/">Nayerah</a></li>
+							<li><a href="https://www.linkedin.com/in/samayeeta-maitra">Samayeeta M.</a></li>
+							<li><a href="https://www.linkedin.com/in/">Sajida</a></li>
+						</ul>
+					</p>
+				</div>
+			</div>
+		</div>
+		</nav>
+		<header>
+			<img src="/img/Helping_Hearts.png">
+			<h1>
+			<!--	<span>Helping Hands</span> -->
+			</h1>
+		</header>
+		
+		<aside>
+			<h3>Sort</h3>
+			<section>
+				<input type="radio" name="sort" value="down" checked>
+				<label>Name: A to Z</label>
+				<input type="radio" name="sort" value="up">
+				<label>Name: Z to A</label>
+			</section>
+		</aside>
+		
+		<main>
+			<div>
+				<img src="/img/string_lights_in_jar.PNG">
+				<h3>Katrina Best</h3>
+				<h4>Want to talk: Yes</h4>
+			</div>
+			<div>
+				<img src="/img/string_lights_in_jar.PNG">
+				<h3>Samayeeta M.</h3>
+				<h4>Want to talk: Yes</h4>
+			</div>
+		</main>
+		
+		<footer>
+			<div>This site is made with love to increase the mental health of communities around the world by letting them know who is okay and who isn't right now in these trying times. This platform also helps others know what they can do to support you.</div>
+		</footer>
+	</body>
+</html>

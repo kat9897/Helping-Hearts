@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js" charset="utf-8"></script>
+		<script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+		<script type="module">
+			
+			async function showPlots() {
+				const resp = await fetch("/sample.csv"), 
+				data = await resp.text(),
+				json = Papa.parse(data, {header: true});
+				
+				createPieChart(json.data, "talking", "Talk")
+				createBarChart(json.data, "gender", "Gender")
+			}
+			
+			function createPieChart(rawdata, id, column) {
+				var parsedData = rawdata
+				.map(r => r[column])
+				.reduce((o, c) => {
+					o[c] = o[c] || 0;
+					o[c]++;
+					return o;
+				}, {})
+				
+				var values = [];
+				var labels = [];
+				var total = 0;
+				Object.keys(parsedData).forEach(label => {
+					const value = parsedData[label];
+					total += value;
+					values.push(value);
+					labels.push(label)
+				})
+				
+				values = values.map(v => v/total*100)
+				var data = [{
+					values: values,
+					labels: labels,
+					type: "pie"
+				}];
+				
+				var layout = {
+					height: 400,
+					width: 500
+				};
+				
+				Plotly.newPlot(id, data, layout);
+			}
+			
+			function createBarChart(rawdata, id, column) {
+				var parsedData = rawdata
+				.map(r => r[column])
+				.reduce((o, c) => {
+					o[c] = o[c] || 0;
+					o[c]++;
+					return o;
+				}, {})
+				
+				var values = [];
+				var labels = [];
+				var total = 0;
+				Object.keys(parsedData).forEach(label => {
+					const value = parsedData[label];
+					total += value;
+					values.push(value);
+					labels.push(label)
+				})
+				
+				values = values.map(v => v/total*100);
+				var data = [
+					{
+						x: labels,
+						y: values,
+						type: "bar"
+					}
+				];
+				Plotly.newPlot("gender", data);
+				
+			}
+			
+			showPlots();
+		</script>
+	</head>
+	<body>
+		<div id="talking"></div>
+		<div id="gender"></div>
+	</body>
+</html>
